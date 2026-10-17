@@ -143,7 +143,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_flf07")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"Turn_around_poses",
 "speed": 5.0
 }, {
@@ -184,9 +184,9 @@ script = ExtResource("1_0e48y")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1822914711]
 position = Vector2(100.5, 100.5)
-scale = Vector2(6.21875, 6.28125)
+scale = Vector2(4.3, 4.343)
 sprite_frames = SubResource("SpriteFrames_pm5qw")
-animation = &"Walking"
+animation = &"Turn_around_poses"
 
 [node name="Area2D" type="Area2D" parent="AnimatedSprite2D" unique_id=397596472]
 
