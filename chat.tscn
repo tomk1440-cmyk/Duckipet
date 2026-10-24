@@ -29,7 +29,7 @@ text = "Gumi Chat"
 
 [node name="CloseButton" type="Button" parent="Content/TitleBar" unique_id=995788331]
 layout_mode = 2
-text = "x"
+text = "+ New Chat"
 
 [node name="Messages" type="RichTextLabel" parent="Content" unique_id=1710833092]
 custom_minimum_size = Vector2(0, 300)
@@ -47,3 +47,9 @@ placeholder_text = "Message Gumi..."
 [node name="SendButton" type="Button" parent="Content/InputRow" unique_id=622200981]
 layout_mode = 2
 text = "Send"
+
+[node name="CopyLastButton" type="Button" parent="Content" unique_id=696675475]
+layout_mode = 2
+text = "Copy last response"
+
+[node name="AIRequest" type="HTTPRequest" parent="." unique_id=418123223]
