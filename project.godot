@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Duckipet"
-run/main_scene="uid://c6mv1mn12y3fa"
+run/main_scene="uid://yrgigx4wk1bl"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 

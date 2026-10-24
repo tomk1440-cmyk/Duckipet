@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://0tg0p11ocu0l"]
+
+[ext_resource type="Script" uid="uid://dlcpltkoo2df" path="res://chat.gd" id="1_dg5i7"]
+
+[node name="Chat" type="Window" unique_id=817177879]
+oversampling_override = 1.0
+position = Vector2i(0, 36)
+size = Vector2i(450, 550)
+visible = false
+force_native = true
+min_size = Vector2i(450, 550)
+script = ExtResource("1_dg5i7")
+
+[node name="Content" type="VBoxContainer" parent="." unique_id=1726866394]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="TitleBar" type="HBoxContainer" parent="Content" unique_id=1232951904]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="Content/TitleBar" unique_id=1568414337]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Gumi Chat"
+
+[node name="CloseButton" type="Button" parent="Content/TitleBar" unique_id=995788331]
+layout_mode = 2
+text = "x"
+
+[node name="Messages" type="RichTextLabel" parent="Content" unique_id=1710833092]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="InputRow" type="HBoxContainer" parent="Content" unique_id=2063602381]
+layout_mode = 2
+
+[node name="MessageInput" type="LineEdit" parent="Content/InputRow" unique_id=1849210840]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Message Gumi..."
+
+[node name="SendButton" type="Button" parent="Content/InputRow" unique_id=622200981]
+layout_mode = 2
+text = "Send"

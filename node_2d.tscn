@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://scjadet8jb5" path="res://Gumi.gd" id="1_0e48y"]
 [ext_resource type="Texture2D" uid="uid://xgeexdna3e4e" path="res://robot_spritesheet.png" id="2_epypp"]
+[ext_resource type="Texture2D" uid="uid://b0ngo8pa65k6v" path="res://icon.svg" id="3_epypp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0hol4"]
 atlas = ExtResource("2_epypp")
@@ -168,7 +169,7 @@ animations = [{
 }],
 "loop": 1,
 "name": &"Walking",
-"speed": 5.0
+"speed": 4.0
 }, {
 "frames": [],
 "loop": 1,
@@ -193,3 +194,21 @@ animation = &"Turn_around_poses"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatedSprite2D/Area2D" unique_id=1329215989]
 position = Vector2(0.3200016, 6.447756)
 shape = SubResource("RectangleShape2D_io3ca")
+
+[node name="StopButton" type="Button" parent="." unique_id=1845787799]
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="SpeechLabel" type="Label" parent="." unique_id=745969629]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="SpeechPanel" type="Panel" parent="." unique_id=1986192208]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TrayIcon" type="StatusIndicator" parent="." unique_id=301142097]
+tooltip = "Gumi"
+icon = ExtResource("3_epypp")
+
+[node name="TrayMenu" type="PopupMenu" parent="." unique_id=520029113]

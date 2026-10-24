@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://yrgigx4wk1bl"]
+
+[ext_resource type="Script" uid="uid://ddsgoixbpy2ml" path="res://Setup.gd" id="1_yujpc"]
+
+[node name="Setup" type="Window" unique_id=2040900273]
+oversampling_override = 1.0
+size = Vector2i(800, 1000)
+visible = false
+force_native = true
+min_size = Vector2i(800, 1000)
+script = ExtResource("1_yujpc")
+
+[node name="Content" type="Control" parent="." unique_id=1468970205]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="Panel" parent="Content" unique_id=1675109218]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TitleLabel" type="Label" parent="Content" unique_id=1141219944]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="ProviderOption" type="OptionButton" parent="Content" unique_id=234039119]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 20.0
+
+[node name="EndpointInput" type="LineEdit" parent="Content" unique_id=1396364840]
+layout_mode = 0
+offset_right = 68.5
+offset_bottom = 31.0
+
+[node name="ModelInput" type="LineEdit" parent="Content" unique_id=1304610450]
+layout_mode = 0
+offset_right = 68.5
+offset_bottom = 31.0
+
+[node name="ApiKeyInput" type="LineEdit" parent="Content" unique_id=2011363340]
+layout_mode = 0
+offset_right = 68.5
+offset_bottom = 31.0
+
+[node name="TestButton" type="Button" parent="Content" unique_id=72060844]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="SaveButton" type="Button" parent="Content" unique_id=921640163]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="Label" type="Label" parent="Content" unique_id=222237309]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="StatusLabel" type="Label" parent="Content" unique_id=69255414]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="AIRequest" type="HTTPRequest" parent="." unique_id=1380736653]
+
+[connection signal="item_selected" from="Content/ProviderOption" to="." method="_on_provider_option_item_selected"]
