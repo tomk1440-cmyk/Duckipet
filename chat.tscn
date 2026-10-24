@@ -35,6 +35,28 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jqtso"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.3137255, 0.43529412, 0.8392157, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mp2uv"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.50980395, 0.6156863, 1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [node name="Chat" type="Window" unique_id=817177879]
 oversampling_override = 1.0
 position = Vector2i(0, 36)
@@ -65,6 +87,7 @@ layout_mode = 2
 text = "+ New Chat"
 
 [node name="Messages" type="RichTextLabel" parent="Content" unique_id=1710833092]
+visible = false
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 size_flags_vertical = 3
@@ -73,6 +96,16 @@ theme_override_colors/font_selected_color = Color(0.20784314, 0.26666668, 0.3607
 theme_override_constants/line_separation = 5
 theme_override_styles/normal = SubResource("StyleBoxFlat_dg5i7")
 bbcode_enabled = true
+
+[node name="ChatScroll" type="ScrollContainer" parent="Content" unique_id=217142786]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MessageList" type="VBoxContainer" parent="Content/ChatScroll" unique_id=1197502670]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
 
 [node name="InputRow" type="HBoxContainer" parent="Content" unique_id=2063602381]
 layout_mode = 2
@@ -88,9 +121,12 @@ placeholder_text = "Message Gumi..."
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_t67cl")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_jqtso")
+theme_override_styles/hover = SubResource("StyleBoxFlat_mp2uv")
 text = "Send"
 
 [node name="CopyLastButton" type="Button" parent="Content" unique_id=696675475]
+visible = false
 layout_mode = 2
 text = "Copy last response"
 

@@ -6,6 +6,8 @@ extends Window
 @onready var new_chat_button: Button = $Content/TitleBar/CloseButton
 @onready var ai_request: HTTPRequest = $AIRequest
 @onready var copy_last_button: Button = $Content/CopyLastButton
+@onready var message_list: VBoxContainer = $Content/ChatScroll/MessageList
+@onready var chat_scroll: ScrollContainer = $Content/ChatScroll
 
 var conversation: Array[Dictionary] = []
 var conversation_history: Array[String] = []
@@ -40,6 +42,8 @@ func _ready() -> void:
 	else:
 		messages.append_text("\n\n[!] Could not load AI settings.")
 	
+	chat_scroll.resized.connect(_update_bubble_widths)
+	
 func _on_send_pressed() -> void:
 	send_message()
 
@@ -53,7 +57,7 @@ func send_message() -> void:
 		return
 	
 	conversation_history.append(message)
-	messages.append_text("\n\n[b]You:[/b]\n" + format_ai_response(message) + "\n")
+	add_message_bubble("You", format_ai_response(message))
 	if endpoint.is_empty() or model.is_empty():
 		messages.append_text("\n[!] Set up the AI in Settings first.")
 		return
@@ -107,8 +111,10 @@ func send_message() -> void:
 
 func _on_new_chat_pressed() -> void:
 	conversation_history.clear()
-	messages.clear()
-	messages.append_text("[center][b]New chat[/b][/center]\n\nHi! Here we go again.")
+	for child in message_list.get_children():
+		message_list.remove_child(child)
+		child.queue_free()
+		
 	message_input.clear()
 	message_input.grab_focus()
 	conversation.clear()
@@ -143,7 +149,7 @@ func _on_request_completed(
 	conversation.append({"role": "user", "content": conversation_history[-1]})
 	conversation.append({"role": "assistant", "content": reply})
 	
-	messages.append_text("\n\n[b]Gumi:[/b] " + format_ai_response(reply))
+	add_message_bubble("Gumi", format_ai_response(reply))
 	messages.scroll_to_line(messages.get_line_count() - 1)
 
 func _on_copy_last_pressed() -> void:
@@ -232,3 +238,71 @@ func format_ai_response(text: String) -> String:
 		)
 	
 	return output
+
+
+
+
+
+
+func add_message_bubble(sender: String, text: String) -> void:
+	var row := HBoxContainer.new()
+	var bubble := PanelContainer.new()
+	bubble.custom_minimum_size.x = minf(chat_scroll.size.x * 0.82, 650.0)
+	var label := RichTextLabel.new()
+	var name_label :=  Label.new()
+	name_label.text = sender
+	name_label.add_theme_font_size_override("font_size", 13)
+	name_label.add_theme_color_override("font_color", Color("#9AA4B2"))
+	
+
+	label.bbcode_enabled = true
+	label.fit_content = true
+	label.scroll_active = false
+	label.selection_enabled = true
+	label.mouse_filter = Control.MOUSE_FILTER_STOP
+	label.custom_minimum_size= Vector2(0,0)
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.text = text
+	label.visible = true
+
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("#222735") if sender == "You" else Color("#171B24")
+	style.set_corner_radius_all(12)
+	style.content_margin_left = 12
+	style.content_margin_right = 12
+	style.content_margin_top = 8
+	style.content_margin_bottom = 8
+
+	bubble.add_theme_stylebox_override("panel", style)
+	bubble.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	var bubble_content := VBoxContainer.new()
+	bubble_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bubble_content.add_child(name_label)
+	bubble_content.add_child(label)
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bubble.add_child(bubble_content)
+
+	if sender == "You":
+		row.alignment = BoxContainer.ALIGNMENT_END
+	else:
+		row.alignment = BoxContainer.ALIGNMENT_BEGIN
+
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(bubble)
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	message_list.add_child(row)
+	call_deferred("_scroll_chat_to_bottom")
+
+func _scroll_chat_to_bottom() -> void:
+	await get_tree().process_frame
+	chat_scroll.scroll_vertical = int(chat_scroll.get_v_scroll_bar().max_value)
+
+func _update_bubble_widths() -> void:
+	var bubble_width: float = minf(chat_scroll.size.x * 0.82, 650.0)
+	
+	for row in message_list.get_children():
+		if row is HBoxContainer and row.get_child_count() > 0:
+			var bubble := row.get_child(0) as PanelContainer
+			if bubble:
+				bubble.custom_minimum_size.x = bubble_width
