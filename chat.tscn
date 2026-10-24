@@ -2,6 +2,39 @@
 
 [ext_resource type="Script" uid="uid://dlcpltkoo2df" path="res://chat.gd" id="1_dg5i7"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dg5i7"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.09019608, 0.105882354, 0.14117648, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yj8al"]
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+bg_color = Color(0.13333334, 0.15294118, 0.20784314, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t67cl"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0.42352942, 0.54901963, 1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [node name="Chat" type="Window" unique_id=817177879]
 oversampling_override = 1.0
 position = Vector2i(0, 36)
@@ -35,6 +68,11 @@ text = "+ New Chat"
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.9019608, 0.91764706, 0.9490196, 1)
+theme_override_colors/font_selected_color = Color(0.20784314, 0.26666668, 0.36078432, 1)
+theme_override_constants/line_separation = 5
+theme_override_styles/normal = SubResource("StyleBoxFlat_dg5i7")
+bbcode_enabled = true
 
 [node name="InputRow" type="HBoxContainer" parent="Content" unique_id=2063602381]
 layout_mode = 2
@@ -42,10 +80,14 @@ layout_mode = 2
 [node name="MessageInput" type="LineEdit" parent="Content/InputRow" unique_id=1849210840]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9019608, 0.91764706, 0.9490196, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_yj8al")
 placeholder_text = "Message Gumi..."
 
 [node name="SendButton" type="Button" parent="Content/InputRow" unique_id=622200981]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_t67cl")
 text = "Send"
 
 [node name="CopyLastButton" type="Button" parent="Content" unique_id=696675475]

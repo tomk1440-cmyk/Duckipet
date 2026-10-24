@@ -53,8 +53,7 @@ func send_message() -> void:
 		return
 	
 	conversation_history.append(message)
-	messages.append_text("\n\n[b]You:[/b] " + message)
-	messages.append_text("\n[b]Gumi:[/b] Got the message! Beep boop!")
+	messages.append_text("\n\n[b]You:[/b]\n" + format_ai_response(message) + "\n")
 	if endpoint.is_empty() or model.is_empty():
 		messages.append_text("\n[!] Set up the AI in Settings first.")
 		return
@@ -99,10 +98,12 @@ func send_message() -> void:
 		send_button.disabled = false
 		messages.append_text("\n[!] Could not start request: " + str(error))
 	
-	
-	
 	message_input.clear()
 	messages.scroll_to_line(messages.get_line_count() - 1)
+	
+	send_button.text = "Send"
+	message_input.placeholder_text = "Message Gumi..."
+	messages.scroll_following = true
 
 func _on_new_chat_pressed() -> void:
 	conversation_history.clear()
@@ -110,6 +111,7 @@ func _on_new_chat_pressed() -> void:
 	messages.append_text("[center][b]New chat[/b][/center]\n\nHi! Here we go again.")
 	message_input.clear()
 	message_input.grab_focus()
+	conversation.clear()
 
 func _on_close_requested() -> void:
 	hide()
@@ -141,13 +143,92 @@ func _on_request_completed(
 	conversation.append({"role": "user", "content": conversation_history[-1]})
 	conversation.append({"role": "assistant", "content": reply})
 	
-	messages.append_text("\n\n[b]Gumi:[/b] " + reply)
+	messages.append_text("\n\n[b]Gumi:[/b] " + format_ai_response(reply))
 	messages.scroll_to_line(messages.get_line_count() - 1)
 
 func _on_copy_last_pressed() -> void:
 	for i in range(conversation.size() - 1, -1, -1):
-		DisplayServer.clipboard_set(
-			str(conversation[i].get("content", ""))
+		if conversation[i].get("role") == "assistant":
+			DisplayServer.clipboard_set(
+				str(conversation[i].get("content", ""))
+			)
+			copy_last_button.text = "Copied!"
+			return
+
+func format_ai_response(text: String) -> String:
+	var output = text
+	output = output.replace("\r\n", "\n")
+	
+	var code_blocks: Array[String] = []
+	var block_regex := RegEx.new()
+	block_regex.compile("(?s)```([a-zA-Z0-9_+.-]*)[ \t]*\n(.*?)\n?```")
+	print("Block matches: ", block_regex.search_all(output).size())
+	
+	for block_match in block_regex.search_all(output):
+		var full_block := block_match.get_string()
+		var language := block_match.get_string(1)
+		var code := block_match.get_string(2).strip_edges()
+		
+		code = code.replace("[", "[lb]").replace("]", "[rb]")
+		
+
+		var formatted_block := "[bgcolor=#252b36][color=#8bd5ff]"
+
+		if not language.is_empty():
+			formatted_block += "[color=#9aa4b2]" + language + "[/color]\n"
+
+		formatted_block += code + "[/color][/bgcolor]"
+
+		var placeholder := "GUMICODEBLOCK" + str(code_blocks.size()) + "END"
+		code_blocks.append(formatted_block)
+
+		output = output.replace(full_block, placeholder)
+	
+	output = output.replace("[", "[lb]").replace("]", "[rb]")
+	
+	var bold_regex = RegEx.new()
+	bold_regex.compile("\\*\\*(.+?)\\*\\*")
+	output = bold_regex.sub(output, "[b]$1[/b]", true)
+	
+	var italic_regex = RegEx.new()
+	italic_regex.compile("\\*(.+?)\\*")
+	output = italic_regex.sub(output, "[i]$1[/i]", true)
+	
+	var code_regex = RegEx.new()
+	code_regex.compile("(?<!`)`([^`\\n]+)`(?!`)")
+	print("Inline Code Matches: ", code_regex.search_all(output).size())
+	output = code_regex.sub(
+		output,
+		"[bgcolor=#252b36][color=#8bd5ff]$1[/color][/bgcolor]",
+		true
+	)
+	
+	var heading_regex = RegEx.new()
+	heading_regex.compile("(?m)^### (.+)$")
+	output = heading_regex.sub(output, "[color=#8bd5ff][b]$1[/b][/color]", true)
+	
+	heading_regex.compile("(?m)^## (.+)$")
+	output = heading_regex.sub(output, "[color=#8bd5ff][font_size=20][b]$1[/b][/font_size][/color]", true)
+	
+	heading_regex.compile("(?m)^# (.+)$")
+	output = heading_regex.sub(output, "[color=#8bd5ff][font_size=24][b]$1[/b][/font_size][/color]", true)
+	
+	var list_regex = RegEx.new()
+	list_regex.compile("(?m)^[-*] (.+)$")
+	output = list_regex.sub(output, "•  $1", true)
+	
+	var numbered_list_regex := RegEx.new()
+	numbered_list_regex.compile("(?m)^\\d+\\. (.+)$")
+	output = numbered_list_regex.sub(output, "•  $1", true)
+	
+	output = output.replace("\n- ", "\n\n•  ")
+	output = output.replace("\n* ", "\n\n•  ")
+	output = output.replace("\n\n\n", "\n\n")
+	
+	for i in range(code_blocks.size()):
+		output = output.replace(
+			"GUMICODEBLOCK" + str(i) + "END",
+			code_blocks[i]
 		)
-		copy_last_button.text = "Copied!"
-		return
+	
+	return output
